@@ -1,171 +1,84 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pocket Signals</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #0b1120;
-      color: #e5e7eb;
-      font-family: Arial, sans-serif;
-    }
-    header {
-      padding: 20px 16px;
-      background: #111a2e;
-      border-bottom: 1px solid #253149;
-    }
-    header h1 { margin: 0 0 8px; font-size: 23px; }
-    header p { margin: 0; color: #9ca3af; font-size: 13px; }
-    main { max-width: 850px; margin: auto; padding: 16px; }
-    .panel {
-      background: #111a2e;
-      border: 1px solid #26344d;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 15px;
-    }
-    .status { color: #fbbf24; font-size: 14px; }
-    .muted { color: #9ca3af; font-size: 13px; line-height: 1.8; }
-    h2 { font-size: 17px; margin-top: 0; }
-    select, button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 9px;
-      font-size: 15px;
-    }
-    select {
-      color: white;
-      background: #0b1120;
-      border: 1px solid #34445f;
-      margin: 8px 0 12px;
-    }
-    button {
-      background: #2563eb;
-      border: 0;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    .pairs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .pair {
-      background: #0b1120;
-      border: 1px solid #26344d;
-      border-radius: 10px;
-      padding: 13px;
-    }
-    .pair strong { display: block; margin-bottom: 9px; }
-    .price { color: #9ca3af; font-size: 13px; }
-    .signal {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 10px;
-      background: #0b1120;
-      border: 1px solid #26344d;
-      line-height: 1.9;
-      overflow-wrap: anywhere;
-    }
-    footer {
-      text-align: center;
-      color: #6b7280;
-      font-size: 12px;
-      padding: 20px;
-    }
-    @media (max-width: 360px) {
-      .pairs { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Pocket VIP — منصة الأسواق</title>
+<script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#080e19;--panel:#101a2a;--panel2:#0c1524;--line:#223149;--text:#e8eef8;--muted:#8ea0ba;--green:#22c993;--red:#ff657a;--blue:#70a7ff;--gold:#f2c66d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#142848 0,transparent 40%),var(--bg);color:var(--text);font:14px/1.6 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}a{color:var(--blue)}.wrap{max-width:1500px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#6d9eff,#7b61ff);font-weight:900;font-size:19px;color:white}.brand h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn,.field{border:1px solid var(--line);border-radius:10px;background:#111d30;color:var(--text);padding:9px 12px}.btn.primary{background:#396ff0;border-color:#396ff0}.btn:hover{filter:brightness(1.12)}.status{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}.dot.live{background:var(--green);box-shadow:0 0 10px #22c99366}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.stat,.panel{background:linear-gradient(145deg,#111c2e,#0d1625);border:1px solid var(--line);border-radius:16px}.stat{padding:15px}.stat .label{color:var(--muted);font-size:12px}.stat .value{font-size:23px;font-weight:750;margin-top:4px}.layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,1fr);gap:14px}.panel{padding:15px;min-width:0}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.panelhead h2{font-size:15px;margin:0}.tools{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.field{min-width:0;max-width:100%;padding:8px}.field option{background:#101a2a}.charttitle{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.price{font-size:25px;font-weight:800;direction:ltr}.change{font-size:12px}.positive{color:var(--green)!important}.negative{color:var(--red)!important}.muted{color:var(--muted)}#chart{height:370px;width:100%;direction:ltr}.chartfoot{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:12px;padding-top:8px}.tablewrap{overflow:auto;max-height:610px}.market-table{width:100%;border-collapse:collapse;white-space:nowrap}.market-table th{position:sticky;top:0;background:#111c2e;color:var(--muted);font-weight:500;text-align:right;padding:10px 8px;font-size:11px}.market-table td{border-bottom:1px solid #1b2a3d;padding:10px 8px}.market-table tr{cursor:pointer}.market-table tbody tr:hover,.market-table tr.selected{background:#192942}.symbol{font-weight:750;direction:ltr;text-align:right}.desc{font-size:11px;color:var(--muted);max-width:155px;overflow:hidden;text-overflow:ellipsis}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:2px 7px;font-size:10px;color:var(--muted)}.signalbox{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.signal{background:#0b1422;border:1px solid var(--line);border-radius:11px;padding:10px}.signal .label{font-size:11px;color:var(--muted)}.signal .value{font-weight:700;margin-top:3px}.analysis{background:#0b1422;border:1px solid var(--line);border-radius:12px;padding:12px}.analysis h3{font-size:13px;margin:0 0 8px}.analysis p{margin:5px 0;color:#bdc9dc;font-size:12px}.empty{padding:30px 10px;text-align:center;color:var(--muted)}.bottom{color:var(--muted);font-size:11px;text-align:center;padding:20px 8px}.toast{position:fixed;bottom:18px;left:18px;background:#1b2b42;border:1px solid var(--line);padding:12px 16px;border-radius:12px;max-width:90vw;z-index:10;display:none}.loading{opacity:.65}.mobile-toggle{display:none}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}#chart{height:330px}.tablewrap{max-height:420px}}
+@media(max-width:520px){.wrap{padding:10px}.top{align-items:flex-start}.brand h1{font-size:17px}.stat{padding:11px}.stat .value{font-size:19px}.panel{padding:11px}.signalbox{grid-template-columns:repeat(3,minmax(0,1fr))}.signal{padding:7px}.price{font-size:22px}.hide-mobile{display:none}.actions .btn{padding:8px}.charttools{width:100%}#chart{height:290px}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>📊 Pocket Signals</h1>
-    <p>لوحة متابعة وتحليل أزواج العملات</p>
-  </header>
-
-  <main>
-    <section class="panel">
-      <h2>حالة النظام</h2>
-      <p class="status" id="connection">
-        ● لم يتم ربط مصدر الأسعار بعد
-      </p>
-      <p class="muted">
-        هذه نسخة أولية. لن نعرض أسعاراً أو إشارات وهمية
-        على أنها بيانات مباشرة.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>أزواج العملات</h2>
-      <div class="pairs" id="pairs"></div>
-    </section>
-
-    <section class="panel">
-      <h2>إعداد التحليل</h2>
-      <label for="pair">اختر زوج العملات</label>
-      <select id="pair">
-        <option>EUR/USD</option>
-        <option>GBP/USD</option>
-        <option>USD/JPY</option>
-        <option>AUD/USD</option>
-        <option>USD/CAD</option>
-        <option>EUR/JPY</option>
-      </select>
-
-      <label for="timeframe">الإطار الزمني للشموع</label>
-      <select id="timeframe">
-        <option value="1">دقيقة واحدة</option>
-        <option value="5">5 دقائق</option>
-        <option value="15">15 دقيقة</option>
-      </select>
-
-      <button id="analyze" disabled>
-        التحليل متوقف حتى ربط بيانات الأسعار
-      </button>
-
-      <div class="signal" id="result" aria-live="polite">
-        <strong>لا توجد إشارة حالياً</strong>
-        <div class="muted">
-          سنفعّل التحليل بعد ربط مصدر الأسعار والتحقق من
-          بيانات الشموع وبناء استراتيجية قابلة للاختبار.
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      Pocket Signals · نسخة تجريبية · ليست توصية مالية
-    </footer>
-  </main>
-
-  <script>
-    const pairs = [
-      "EUR/USD", "GBP/USD", "USD/JPY",
-      "AUD/USD", "USD/CAD", "EUR/JPY"
-    ];
-
-    const container = document.getElementById("pairs");
-
-    pairs.forEach(name => {
-      const card = document.createElement("div");
-      card.className = "pair";
-
-      const title = document.createElement("strong");
-      title.textContent = name;
-
-      const price = document.createElement("div");
-      price.className = "price";
-      price.textContent = "بانتظار بيانات الأسعار";
-
-      card.append(title, price);
-      container.appendChild(card);
-    });
-  </script>
-</body>
-</html>
+<div class="wrap">
+<header class="top">
+<div class="brand"><div class="logo">P</div><div><h1>Pocket VIP</h1><div class="sub">لوحة الأسواق والتحليل الفني</div></div></div>
+<div class="actions"><div class="status"><span id="liveDot" class="dot"></span><span id="connectionText">جارٍ الاتصال بمصدر البيانات…</span></div><button class="btn" id="refreshBtn">↻ تحديث</button><button class="btn" id="watchBtn">☆ المفضلة</button></div>
+</header>
+<section class="stats">
+<div class="stat"><div class="label">الأدوات المعروضة</div><div class="value" id="totalCount">—</div><div class="sub">من قائمة المصدر</div></div>
+<div class="stat"><div class="label">أسعار متاحة</div><div class="value positive" id="liveCount">—</div><div class="sub">تم استلامها بنجاح</div></div>
+<div class="stat"><div class="label">الرابحون في القائمة</div><div class="value positive" id="gainerCount">—</div><div class="sub">حسب تغير اليوم</div></div>
+<div class="stat"><div class="label">آخر تحديث</div><div class="value" style="font-size:17px" id="lastUpdated">—</div><div class="sub">توقيت جهازك</div></div>
+</section>
+<div class="layout">
+<main class="panel">
+<div class="panelhead"><h2>مخطط السعر</h2><div class="tools"><select class="field" id="timeframe" aria-label="الإطار الزمني"><option value="1m">دقيقة</option><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option><option value="30m">30 دقيقة</option><option value="1h" selected>ساعة</option><option value="4h">4 ساعات</option><option value="1d">يومي</option></select><select class="field" id="candleCount" aria-label="عدد الشموع"><option value="100">100 شمعة</option><option value="250" selected>250 شمعة</option><option value="500">500 شمعة</option><option value="1000">1000 شمعة</option></select><button class="btn primary" id="analyzeBtn">تحليل الأداة</button></div></div>
+<div class="charttitle"><div><div class="sub" id="selectedDescription">اختر أداة من القائمة</div><div class="symbol" id="selectedSymbol">EURUSD</div></div><div class="price" id="selectedPrice">—</div><div class="change" id="selectedChange">—</div></div>
+<div id="chart"></div><div class="chartfoot"><span id="ohlcInfo">افتح أداة لتحميل بيانات الشموع</span><span id="sourceInfo">المصدر: Biquote</span></div>
+<div class="signalbox"><div class="signal"><div class="label">الاتجاه العام</div><div class="value" id="trendValue">—</div></div><div class="signal"><div class="label">RSI (14)</div><div class="value" id="rsiValue">—</div></div><div class="signal"><div class="label">تقاطع المتوسطات</div><div class="value" id="maValue">—</div></div></div>
+<div class="analysis"><h3>قراءة فنية مختصرة</h3><div id="analysisText"><p>اختر أداة مالية لتحميل الشموع وحساب المؤشرات الفنية. النتائج تعليمية وليست توصية استثمارية.</p></div></div>
+</main>
+<aside class="panel">
+<div class="panelhead"><h2>الأسواق والأدوات</h2><span class="pill" id="listState">تحميل القائمة</span></div>
+<div class="tools" style="margin-bottom:10px"><input class="field" id="searchInput" placeholder="ابحث عن رمز أو اسم…" style="flex:1;width:100%" autocomplete="off"><select class="field" id="assetType" style="width:100%"><option value="">كل الفئات</option><option value="Forex">فوركس</option><option value="Stock">أسهم</option><option value="Crypto">عملات رقمية</option><option value="Index">مؤشرات</option><option value="Commodity">سلع ومعادن</option></select></div>
+<div class="tablewrap"><table class="market-table"><thead><tr><th>الأداة</th><th>السعر</th><th>تغير %</th></tr></thead><tbody id="marketRows"><tr><td colspan="3" class="empty">جارٍ تحميل الأدوات…</td></tr></tbody></table></div>
+<div class="sub" style="margin-top:10px">اضغط على أي أداة لعرض مخططها وتحليلها. الأدوات والأسعار تعتمد على تغطية مزود البيانات.</div>
+</aside>
+</div>
+<footer class="bottom">Pocket VIP · بيانات السوق من Biquote API · الأسعار قد تتأخر أو تكون آخر سعر عند إغلاق السوق. التحليل آلي وتعليمي ولا يضمن النتائج.</footer>
+</div><div class="toast" id="toast"></div>
+<script>
+(function(){
+'use strict';
+var API='https://biquote.io/api';
+var symbols=[],ticks={},favorites={},selected='EURUSD',showFavorites=false,chart,candleSeries,volumeSeries,refreshTimer,toastTimer;
+var $=function(id){return document.getElementById(id)};
+function notify(message){var t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.style.display='none'},3800)}
+function fmt(n){if(n===null||n===undefined||!Number.isFinite(Number(n)))return '—';return Number(n).toLocaleString('en-US',{maximumFractionDigits:8})}
+function pct(n){if(n===null||n===undefined||!Number.isFinite(Number(n)))return '—';return (Number(n)>0?'+':'')+Number(n).toFixed(2)+'%'}
+function api(path){return fetch(API+path,{headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})}
+function setStatus(ok,text){$('liveDot').className='dot'+(ok?' live':'');$('connectionText').textContent=text}
+function normalizeList(data){if(Array.isArray(data))return data; if(data&&Array.isArray(data.items))return data.items;return []}
+function typeLabel(t){return ({Forex:'فوركس',Stock:'أسهم',Crypto:'رقمية',Index:'مؤشرات',Commodity:'سلع'})[t]||t||'أخرى'}
+function initChart(){if(!window.LightweightCharts){$('chart').innerHTML='<div class="empty">تعذر تحميل مكتبة الرسم. تحقق من اتصال الإنترنت.</div>';return}
+chart=LightweightCharts.createChart($('chart'),{width:$('chart').clientWidth,height:$('chart').clientHeight,layout:{background:{color:'#0d1625'},textColor:'#9aabc2'},grid:{vertLines:{color:'#1a293c'},horzLines:{color:'#1a293c'}},rightPriceScale:{borderColor:'#26364b'},timeScale:{borderColor:'#26364b',timeVisible:true,secondsVisible:false},crosshair:{mode:0}});
+candleSeries=chart.addCandlestickSeries({upColor:'#22c993',downColor:'#ff657a',borderUpColor:'#22c993',borderDownColor:'#ff657a',wickUpColor:'#22c993',wickDownColor:'#ff657a'});
+volumeSeries=chart.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:'volume',color:'#385477',lastValueVisible:false,priceLineVisible:false});chart.priceScale('volume').applyOptions({scaleMargins:{top:.83,bottom:0},visible:false});
+window.addEventListener('resize',function(){if(chart)chart.applyOptions({width:$('chart').clientWidth,height:$('chart').clientHeight})})}
+function drawRows(){var q=$('searchInput').value.trim().toLowerCase(),type=$('assetType').value;
+var filtered=symbols.filter(function(s){var name=(s.name||s.symbol||'').toLowerCase(),desc=(s.description||'').toLowerCase();return (!type||s.type===type)&&(!q||name.indexOf(q)>=0||desc.indexOf(q)>=0)&&(!showFavorites||favorites[s.name||s.symbol])});
+$('listState').textContent=filtered.length+' أداة';$('marketRows').innerHTML='';
+if(!filtered.length){$('marketRows').innerHTML='<tr><td colspan="3" class="empty">لا توجد أدوات مطابقة. جرّب تغيير البحث أو الفئة.</td></tr>';return}
+var frag=document.createDocumentFragment();
+filtered.slice(0,500).forEach(function(s){var sym=s.name||s.symbol;if(!sym)return;var tick=ticks[sym]||{},price=tick.mid??tick.bid??tick.last,change=tick.dayDiffPercent;var tr=document.createElement('tr');if(sym===selected)tr.className='selected';tr.innerHTML='<td><div class="symbol"></div><div class="desc"></div></td><td class="pricecell" dir="ltr"></td><td class="changecell" dir="ltr"></td>';tr.querySelector('.symbol').textContent=sym;tr.querySelector('.desc').textContent=s.description||typeLabel(s.type);tr.querySelector('.pricecell').textContent=fmt(price);var cc=tr.querySelector('.changecell');cc.textContent=pct(change);cc.className+=' '+(Number(change)>0?'positive':Number(change)<0?'negative':'muted');tr.addEventListener('click',function(){selectSymbol(sym)});frag.appendChild(tr)});
+$('marketRows').appendChild(frag)}
+function updateStats(){$('totalCount').textContent=symbols.length||'—';var available=Object.keys(ticks).filter(function(k){return ticks[k]&&Number.isFinite(Number(ticks[k].mid??ticks[k].bid??ticks[k].last))}).length;$('liveCount').textContent=available;$('gainerCount').textContent=Object.keys(ticks).filter(function(k){return Number(ticks[k].dayDiffPercent)>0}).length;$('lastUpdated').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function loadSymbols(){setStatus(false,'جارٍ تحميل قائمة الأدوات…');return api('/symbols?quotedWithinDays=7').then(function(data){symbols=normalizeList(data);if(!symbols.length)throw new Error('قائمة الأدوات فارغة');$('listState').textContent=symbols.length+' أداة';setStatus(true,'تم تحميل قائمة الأدوات');return loadTicks()}).catch(function(e){setStatus(false,'تعذر تحميل القائمة');$('listState').textContent='خطأ اتصال';notify('تعذر تحميل الأدوات: '+e.message+' — أعد المحاولة.');throw e})}
+function loadTicks(){var batch=symbols.slice(0,100).map(function(s){return s.name||s.symbol}).filter(Boolean);if(!batch.length)return Promise.resolve();var params=batch.map(function(s){return 'symbols='+encodeURIComponent(s)}).join('&');return api('/latest?'+params).then(function(data){if(data&&typeof data==='object')Object.keys(data).forEach(function(k){ticks[k]=data[k]});drawRows();updateStats();setStatus(true,'متصل بمصدر البيانات');return data}).catch(function(e){setStatus(false,'تعذر تحديث الأسعار');notify('لم تنجح قراءة الأسعار: '+e.message);throw e})}
+function loadCandles(){if(!candleSeries)return;var interval=$('timeframe').value,limit=$('candleCount').value;$('ohlcInfo').textContent='جارٍ تحميل الشموع…';return api('/'+encodeURIComponent(selected)+'/ohlc?interval='+encodeURIComponent(interval)+'&limit='+encodeURIComponent(limit)).then(function(data){var bars=Array.isArray(data.bars)?data.bars:[];var clean=bars.filter(function(b){return b.openTime&&[b.open,b.high,b.low,b.close].every(function(n){return Number.isFinite(Number(n))})}).map(function(b){return {time:Math.floor(new Date(b.openTime).getTime()/1000),open:Number(b.open),high:Number(b.high),low:Number(b.low),close:Number(b.close),volume:Number(b.tickVolume||b.volume||0)}}).filter(function(b){return Number.isFinite(b.time)}).sort(function(a,b){return a.time-b.time});var unique=[];clean.forEach(function(b){if(!unique.length||unique[unique.length-1].time!==b.time)unique.push(b)});if(!unique.length)throw new Error('لا توجد شموع متاحة لهذه الأداة');candleSeries.setData(unique.map(function(b){return {time:b.time,open:b.open,high:b.high,low:b.low,close:b.close}}));volumeSeries.setData(unique.map(function(b){return {time:b.time,value:b.volume,color:b.close>=b.open?'#22c99355':'#ff657a55'}}));chart.timeScale().fitContent();var last=unique[unique.length-1];$('ohlcInfo').textContent='O '+fmt(last.open)+' · H '+fmt(last.high)+' · L '+fmt(last.low)+' · C '+fmt(last.close);runAnalysis(unique);return unique}).catch(function(e){$('ohlcInfo').textContent='تعذر تحميل الشموع';$('analysisText').innerHTML='<p>'+escapeHtml(e.message)+' — قد لا تكون بيانات هذه الأداة متاحة من المصدر.</p>';notify('مشكلة في الشموع: '+e.message)})}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function sma(values,n){var out=[];for(var i=0;i<values.length;i++){if(i+1<n){out.push(null);continue}var sum=0;for(var j=i-n+1;j<=i;j++)sum+=values[j];out.push(sum/n)}return out}
+function calcRsi(closes,n){if(closes.length<n+1)return null;var gain=0,loss=0;for(var i=closes.length-n;i<closes.length;i++){var d=closes[i]-closes[i-1];if(d>0)gain+=d;else loss-=d}if(loss===0)return 100;var rs=(gain/n)/(loss/n);return 100-100/(1+rs)}
+function runAnalysis(bars){if(!bars||bars.length<20){$('analysisText').innerHTML='<p>عدد الشموع غير كافٍ لحساب المؤشرات بشكل موثوق.</p>';return}var closes=bars.map(function(b){return b.close}),last=closes[closes.length-1],ma20=sma(closes,20),ma50=sma(closes,50),m20=ma20[ma20.length-1],m50=ma50[ma50.length-1],rsi=calcRsi(closes,14),recent=bars.slice(-20),high=Math.max.apply(null,recent.map(function(b){return b.high})),low=Math.min.apply(null,recent.map(function(b){return b.low}));var trend=(m50&&last<m50)?'هابط':(m20&&last>m20?'صاعد':'عرضي');$('trendValue').textContent=trend;$('trendValue').className='value '+(trend==='صاعد'?'positive':trend==='هابط'?'negative':'');$('rsiValue').textContent=rsi===null?'—':rsi.toFixed(1)+(rsi>70?' · تشبع شراء':rsi<30?' · تشبع بيع':'');$('maValue').textContent=m50?(m20>m50?'إيجابي':m20<m50?'سلبي':'محايد'):'تحتاج 50 شمعة';var lines=[];lines.push('<p><b>الاتجاه:</b> '+trend+' بناءً على السعر والمتوسطات المتاحة.</p>');lines.push('<p><b>RSI 14:</b> '+(rsi===null?'غير متاح':rsi.toFixed(1)+(rsi>70?' — منطقة تشبع شراء محتملة.':rsi<30?' — منطقة تشبع بيع محتملة.':' — ضمن النطاق المتوسط.'))+'</p>');lines.push('<p><b>متوسط 20:</b> '+fmt(m20)+' · <b>متوسط 50:</b> '+(m50?fmt(m50):'بيانات غير كافية')+'</p>');lines.push('<p><b>نطاق آخر 20 شمعة:</b> دعم تقريبي '+fmt(low)+' · مقاومة تقريبية '+fmt(high)+'</p>');lines.push('<p class="muted">هذه مؤشرات حسابية على الشموع المستلمة، وليست ضمانًا لاتجاه السعر أو توصية تداول.</p>');$('analysisText').innerHTML=lines.join('')}
+function selectSymbol(sym){selected=sym;$('selectedSymbol').textContent=sym;var meta=symbols.find(function(s){return (s.name||s.symbol)===sym})||{};$('selectedDescription').textContent=(meta.description||'')+' · '+typeLabel(meta.type);var tick=ticks[sym]||{};$('selectedPrice').textContent=fmt(tick.mid??tick.bid??tick.last);$('selectedChange').textContent=pct(tick.dayDiffPercent);$('selectedChange').className='change '+(Number(tick.dayDiffPercent)>0?'positive':Number(tick.dayDiffPercent)<0?'negative':'muted');drawRows();loadCandles()}
+function refresh(){return loadTicks().then(function(){if(ticks[selected])selectSymbol(selected)}).catch(function(){})}
+$('searchInput').addEventListener('input',drawRows);$('assetType').addEventListener('change',drawRows);$('timeframe').addEventListener('change',loadCandles);$('candleCount').addEventListener('change',loadCandles);$('analyzeBtn').addEventListener('click',loadCandles);$('refreshBtn').addEventListener('click',function(){refresh().then(function(){notify('تم تحديث الأسعار')})});$('watchBtn').addEventListener('click',function(){showFavorites=!showFavorites;$('watchBtn').textContent=showFavorites?'★ عرض الكل':'☆ المفضلة';drawRows()});
+initChart();
+loadSymbols().then(function(){if(!symbols.some(function(s){return (s.name||s.symbol)===selected})&&symbols.length)selected=symbols[0].name||symbols[0].symbol;selectSymbol(selected);refreshTimer=setInterval(function(){loadTicks().catch(function(){})},30000)}).catch(function(){ $('marketRows').innerHTML='<tr><td colspan="3" class="empty">تعذر الاتصال بمصدر البيانات. تحقق من الإنترنت ثم اضغط تحديث.</td></tr>';});
+})();
+</script>
+</body></html>
