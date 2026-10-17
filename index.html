@@ -85,7 +85,7 @@ function runDivergence(rawBars){
    if(p>=5&&isPivot(rsi,p,5,5,'high')){if(prevHigh!==null&&cs[p].high>cs[prevHigh].high&&rsi[p]<rsi[prevHigh])signals.push({index:i,side:-1,text:'دايفرجنس هابط مؤكد'});prevHigh=p}}
  }else{
   // Fast 1m mode: use only closed candles and a rolling prior swing window; no 5-candle right-side pivot wait.
-  var lookback=12,emaFast=emaSeries(closes,22),emaSlow=emaSeries(closes,55),lastSignalAt=-99,lastSignalSide=0;
+  var lookback=12,emaFast=emaSeries(closes,22),emaSlow=emaSeries(closes,55),lastSignalAt=-99;
   for(var k=lookback;k<cs.length;k++){
    var b=cs[k],priorLowIndex=k-lookback,priorHighIndex=k-lookback;
    for(var j=k-lookback+1;j<k;j++){if(cs[j].low<cs[priorLowIndex].low)priorLowIndex=j;if(cs[j].high>cs[priorHighIndex].high)priorHighIndex=j}
@@ -98,8 +98,8 @@ function runDivergence(rawBars){
    var bullScore=(bullDiv?2:0)+(bullCandle?1:0)+(rsi[k]>rsi[k-1]?1:0)+(bullTrend?1:0);
    var bearScore=(bearDiv?2:0)+(bearCandle?1:0)+(rsi[k]<rsi[k-1]?1:0)+(bearTrend?1:0);
    // Require divergence + reversal candle; space same-direction alerts by at least 3 bars.
-   if(bullDiv&&bullCandle&&bullScore>=4&&k-lastSignalAt>=3&&lastSignalSide!==1){signals.push({index:k,side:1,text:'دايفرجنس صاعد سريع',strength:bullScore});lastSignalAt=k;lastSignalSide=1}
-   else if(bearDiv&&bearCandle&&bearScore>=4&&k-lastSignalAt>=3&&lastSignalSide!==-1){signals.push({index:k,side:-1,text:'دايفرجنس هابط سريع',strength:bearScore});lastSignalAt=k;lastSignalSide=-1}
+   if(bullDiv&&bullCandle&&bullScore>=4&&k-lastSignalAt>=3){signals.push({index:k,side:1,text:'دايفرجنس صاعد سريع',strength:bullScore});lastSignalAt=k}
+   else if(bearDiv&&bearCandle&&bearScore>=4&&k-lastSignalAt>=3){signals.push({index:k,side:-1,text:'دايفرجنس هابط سريع',strength:bearScore});lastSignalAt=k}
   }
  }
  var markers=signals.map(function(sig){return {time:cs[sig.index].time,position:sig.side>0?'belowBar':'aboveBar',color:sig.side>0?'#22c993':'#ff657a',shape:sig.side>0?'arrowUp':'arrowDown',text:sig.side>0?'CALL':'PUT'}}).sort(function(a,b){return a.time-b.time});
