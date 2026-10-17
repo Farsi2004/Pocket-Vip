@@ -77,7 +77,7 @@ function rsiSeries(closes,n){var out=new Array(closes.length).fill(null);if(clos
 function isPivot(values,index,left,right,kind){if(index-left<0||index+right>=values.length||values[index]===null||!Number.isFinite(values[index]))return false;var v=values[index];for(var j=index-left;j<=index+right;j++){if(j===index||values[j]===null||!Number.isFinite(values[j]))continue;if(kind==='low'&&values[j]<=v)return false;if(kind==='high'&&values[j]>=v)return false}return true}
 function runDivergence(rawBars){
  var cs=rawBars.filter(function(b){return !b.isOpen}).slice().sort(function(a,b){return a.time-b.time});
- var panel=$('divergenceSignal');if(cs.length<35){if(panel)panel.innerHTML='<p>تحتاج إلى 35 شمعة مغلقة على الأقل لاكتشاف الدايفرجنس.</p>';if(candleSeries&&candleSeries.setMarkers)candleSeries.setMarkers([]);return}
+ var panel=$('divergenceSignal');if(cs.length<35){if(panel)panel.innerHTML='<p>تحتاج إلى 35 شمعة مغلقة على الأقل لاكتشاف الدايفرجنس.</p>';divergenceMarkers=[];renderAllMarkers();return}
  var closes=cs.map(function(b){return b.close}),rsi=rsiSeries(closes,14),signals=[],mode=$('divMode').value;
  if(mode==='confirmed'){
   var prevLow=null,prevHigh=null;
