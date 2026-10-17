@@ -26,10 +26,10 @@
 </section>
 <div class="layout">
 <main class="panel">
-<div class="panelhead"><h2>مخطط السعر</h2><div class="tools"><select class="field" id="timeframe" aria-label="الإطار الزمني"><option value="1m" selected>دقيقة</option><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option><option value="30m">30 دقيقة</option><option value="1h">ساعة</option><option value="4h">4 ساعات</option><option value="1d">يومي</option></select><select class="field" id="divMode" aria-label="طريقة الدايفرجنس"><option value="early" selected>دايفرجنس مبكر</option><option value="confirmed">Pivot مؤكد (5 شموع)</option></select><select class="field" id="tricksMode" aria-label="مؤشر Tricks HeLaL"><option value="on" selected>Tricks HeLaL: تشغيل</option><option value="off">Tricks HeLaL: إيقاف</option></select><select class="field" id="candleCount" aria-label="عدد الشموع"><option value="100">100 شمعة</option><option value="250" selected>250 شمعة</option><option value="500">500 شمعة</option><option value="1000">1000 شمعة</option></select><button class="btn primary" id="analyzeBtn">تحليل الأداة</button></div></div>
+<div class="panelhead"><h2>مخطط السعر</h2><div class="tools"><select class="field" id="timeframe" aria-label="الإطار الزمني"><option value="1m" selected>دقيقة</option><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option><option value="30m">30 دقيقة</option><option value="1h">ساعة</option><option value="4h">4 ساعات</option><option value="1d">يومي</option></select><select class="field" id="divMode" aria-label="طريقة الدايفرجنس"><option value="early" selected>دايفرجنس سريع 1m</option><option value="confirmed">Pivot مؤكد (5 شموع)</option></select><select class="field" id="tricksMode" aria-label="مؤشر Tricks HeLaL"><option value="on" selected>Tricks HeLaL: تشغيل</option><option value="off">Tricks HeLaL: إيقاف</option></select><select class="field" id="candleCount" aria-label="عدد الشموع"><option value="100">100 شمعة</option><option value="250" selected>250 شمعة</option><option value="500">500 شمعة</option><option value="1000">1000 شمعة</option></select><button class="btn primary" id="analyzeBtn">تحليل الأداة</button></div></div>
 <div class="charttitle"><div><div class="sub" id="selectedDescription">اختر أداة من القائمة</div><div class="symbol" id="selectedSymbol">EURUSD</div></div><div class="price" id="selectedPrice">—</div><div class="change" id="selectedChange">—</div></div>
 <div id="chart"></div><div class="chartfoot"><span id="ohlcInfo">افتح أداة لتحميل بيانات الشموع</span><span id="sourceInfo">المصدر: Biquote</span></div>
-<div class="signalbox"><div class="signal"><div class="label">الاتجاه العام</div><div class="value" id="trendValue">—</div></div><div class="signal"><div class="label">RSI (14)</div><div class="value" id="rsiValue">—</div></div><div class="signal"><div class="label">تقاطع المتوسطات</div><div class="value" id="maValue">—</div></div></div><div class="analysis"><h3>إشارة الدايفرجنس</h3><div id="divergenceSignal"><p>حمّل شموع فريم الدقيقة لبدء مراقبة الدايفرجنس.</p></div><div class="sub">الإشارة المبكرة احتمالية وليست تأكيد Pivot نهائيًا أو ضمانًا للربح.</div></div>
+<div class="signalbox"><div class="signal"><div class="label">الاتجاه العام</div><div class="value" id="trendValue">—</div></div><div class="signal"><div class="label">RSI (14)</div><div class="value" id="rsiValue">—</div></div><div class="signal"><div class="label">تقاطع المتوسطات</div><div class="value" id="maValue">—</div></div></div><div class="analysis"><h3>إشارة الدايفرجنس السريع</h3><div id="divergenceSignal"><p>حمّل شموع فريم الدقيقة لبدء مراقبة الدايفرجنس.</p></div><div class="sub">الإشارة المبكرة احتمالية وليست تأكيد Pivot نهائيًا أو ضمانًا للربح.</div></div>
 <div class="analysis"><h3>Tricks HeLaL V 0.01</h3><div id="tricksSignal"><p>تحميل البيانات لحساب Buy-point وSell-point وEMA 22/55.</p></div><div class="sub">إشارات القمم والقيعان لا تظهر إلا بعد تأكيد Pivot بخمس شموع يمينًا؛ علامات الشارت موضوعة على شمعة القمة/القاع التاريخية.</div></div><div class="analysis"><h3>قراءة فنية مختصرة</h3><div id="analysisText"><p>اختر أداة مالية لتحميل الشموع وحساب المؤشرات الفنية. النتائج تعليمية وليست توصية استثمارية.</p></div></div>
 </main>
 <aside class="panel">
@@ -84,21 +84,22 @@ function runDivergence(rawBars){
   for(var i=0;i<cs.length;i++){var p=i-5;if(p>=5&&isPivot(rsi,p,5,5,'low')){if(prevLow!==null&&cs[p].low<cs[prevLow].low&&rsi[p]>rsi[prevLow])signals.push({index:i,side:1,text:'دايفرجنس صاعد مؤكد'}) ;prevLow=p}
    if(p>=5&&isPivot(rsi,p,5,5,'high')){if(prevHigh!==null&&cs[p].high>cs[prevHigh].high&&rsi[p]<rsi[prevHigh])signals.push({index:i,side:-1,text:'دايفرجنس هابط مؤكد'});prevHigh=p}}
  }else{
-  var refLow=null,refHigh=null,usedLow=null,usedHigh=null,bullCandidate=null,bearCandidate=null;
-  for(var k=0;k<cs.length;k++){var pivotIndex=k-5;
-   if(pivotIndex>=5&&isPivot(rsi,pivotIndex,5,5,'low')){refLow={index:pivotIndex,price:cs[pivotIndex].low,rsi:rsi[pivotIndex]};bullCandidate=null}
-   if(pivotIndex>=5&&isPivot(rsi,pivotIndex,5,5,'high')){refHigh={index:pivotIndex,price:cs[pivotIndex].high,rsi:rsi[pivotIndex]};bearCandidate=null}
-   var b=cs[k];
-   if(refLow&&k>refLow.index&&usedLow!==refLow.index){
-    if(b.low<refLow.price&&rsi[k]>refLow.rsi){if(!bullCandidate||b.low<bullCandidate.price)bullCandidate={index:k,price:b.low,rsi:rsi[k]}}
-    else if(bullCandidate&&b.low<bullCandidate.price&&rsi[k]<=refLow.rsi)bullCandidate=null;
-    if(bullCandidate&&b.close>b.open){signals.push({index:k,side:1,text:'دايفرجنس صاعد مبكر'});usedLow=refLow.index;bullCandidate=null}
-   }
-   if(refHigh&&k>refHigh.index&&usedHigh!==refHigh.index){
-    if(b.high>refHigh.price&&rsi[k]<refHigh.rsi){if(!bearCandidate||b.high>bearCandidate.price)bearCandidate={index:k,price:b.high,rsi:rsi[k]}}
-    else if(bearCandidate&&b.high>bearCandidate.price&&rsi[k]>=refHigh.rsi)bearCandidate=null;
-    if(bearCandidate&&b.close<b.open){signals.push({index:k,side:-1,text:'دايفرجنس هابط مبكر'});usedHigh=refHigh.index;bearCandidate=null}
-   }
+  // Fast 1m mode: use only closed candles and a rolling prior swing window; no 5-candle right-side pivot wait.
+  var lookback=12,emaFast=emaSeries(closes,22),emaSlow=emaSeries(closes,55),lastSignalAt=-99,lastSignalSide=0;
+  for(var k=lookback;k<cs.length;k++){
+   var b=cs[k],priorLowIndex=k-lookback,priorHighIndex=k-lookback;
+   for(var j=k-lookback+1;j<k;j++){if(cs[j].low<cs[priorLowIndex].low)priorLowIndex=j;if(cs[j].high>cs[priorHighIndex].high)priorHighIndex=j}
+   var bullDiv=b.low<cs[priorLowIndex].low&&rsi[k]>rsi[priorLowIndex]&&rsi[k]>rsi[k-1];
+   var bearDiv=b.high>cs[priorHighIndex].high&&rsi[k]<rsi[priorHighIndex]&&rsi[k]<rsi[k-1];
+   var bullCandle=b.close>b.open&&b.close>cs[k-1].close;
+   var bearCandle=b.close<b.open&&b.close<cs[k-1].close;
+   var bullTrend=emaFast[k]!==null&&emaSlow[k]!==null&&emaFast[k]>=emaSlow[k];
+   var bearTrend=emaFast[k]!==null&&emaSlow[k]!==null&&emaFast[k]<=emaSlow[k];
+   var bullScore=(bullDiv?2:0)+(bullCandle?1:0)+(rsi[k]>rsi[k-1]?1:0)+(bullTrend?1:0);
+   var bearScore=(bearDiv?2:0)+(bearCandle?1:0)+(rsi[k]<rsi[k-1]?1:0)+(bearTrend?1:0);
+   // Require divergence + reversal candle; space same-direction alerts by at least 3 bars.
+   if(bullDiv&&bullCandle&&bullScore>=4&&k-lastSignalAt>=3&&lastSignalSide!==1){signals.push({index:k,side:1,text:'دايفرجنس صاعد سريع',strength:bullScore});lastSignalAt=k;lastSignalSide=1}
+   else if(bearDiv&&bearCandle&&bearScore>=4&&k-lastSignalAt>=3&&lastSignalSide!==-1){signals.push({index:k,side:-1,text:'دايفرجنس هابط سريع',strength:bearScore});lastSignalAt=k;lastSignalSide=-1}
   }
  }
  var markers=signals.map(function(sig){return {time:cs[sig.index].time,position:sig.side>0?'belowBar':'aboveBar',color:sig.side>0?'#22c993':'#ff657a',shape:sig.side>0?'arrowUp':'arrowDown',text:sig.side>0?'CALL':'PUT'}}).sort(function(a,b){return a.time-b.time});
@@ -106,7 +107,7 @@ function runDivergence(rawBars){
  var last=signals.length?signals[signals.length-1]:null;
  if(!last){panel.innerHTML='<p>لا توجد إشارة دايفرجنس في الشموع المغلقة المحملة.</p>';return}
  var signalBar=cs[last.index],label=last.side>0?'CALL — صعود محتمل':'PUT — هبوط محتمل',when=new Date(signalBar.time*1000).toLocaleString();
- panel.innerHTML='<p><b class="'+(last.side>0?'positive':'negative')+'">'+label+'</b></p><p>'+escapeHtml(last.text)+' · '+escapeHtml(selected)+' · '+escapeHtml(when)+'</p><p class="sub">الوضع: '+(mode==='early'?'مبكر: أول شمعة عكسية مغلقة بعد تحقق الشروط':'Pivot مؤكد: الإشارة بعد 5 شموع يمين القمة/القاع')+' · مدة الاختبار المقترحة 3–5 دقائق.</p>';
+ var strength=last.strength||3;var strengthLabel=strength>=4?'قوة الشروط: مرتفعة': 'قوة الشروط: متوسطة';panel.innerHTML='<p><b class="'+(last.side>0?'positive':'negative')+'">'+label+'</b></p><p>'+escapeHtml(last.text)+' · '+escapeHtml(selected)+' · '+escapeHtml(when)+'</p><p><b>'+strengthLabel+'</b> ('+strength+'/5)</p><p class="sub">الوضع: '+(mode==='early'?'سريع: مقارنة قاع/قمة آخر 12 شمعة مع RSI، وتأكيد بشمعة مغلقة؛ لا ينتظر Pivot بخمس شموع.':'Pivot مؤكد: الإشارة بعد 5 شموع يمين القمة/القاع')+' · لا تدخل أثناء تكوّن الشمعة؛ الإشارة لا تضمن الربح.</p>';
  var key=selected+'|'+signalBar.time+'|'+last.side+'|'+mode;
  if(last.index===cs.length-1&&key!==lastDivergenceNotice){lastDivergenceNotice=key;notify(label+' · '+selected+' · '+mode)}
 }
